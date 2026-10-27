@@ -13,13 +13,11 @@ Live at https://scottfranz.github.io/weather-in-my-life/
 
 ## Updating the Ann Arbor data
 
-1. Download the new days for the Ann Arbor SE station (USC00200228) as a CSV. This link needs no account; change the dates as needed:
+This happens automatically. The **Update Ann Arbor weather** workflow (`.github/workflows/update-weather.yml`) runs on the 3rd of every month. It downloads the newest days from NOAA (`tools/fetch_ann_arbor.py`), rebuilds the page (`tools/build.py`), and commits the result, and GitHub Pages then republishes. To run it right away, open the **Actions** tab, choose the workflow, and click **Run workflow**.
 
-   https://www.ncei.noaa.gov/access/services/data/v1?dataset=daily-summaries&stations=USC00200228&startDate=2026-10-26&endDate=2027-10-26&dataTypes=PRCP,SNOW,TMAX,TMIN&format=csv&units=standard
+Each run asks NOAA for the 30 days before the last day already saved, so late corrections to recent days get picked up. The download is saved as a new `data/ann-arbor-<first day>.csv`. Where files overlap, the file whose name sorts last wins.
 
-2. Save it in `data/` with a name that starts with `ann-arbor`, for example `data/ann-arbor-2026-2027.csv`. If two files cover the same day, the one whose name sorts last wins.
-3. Run `python3 tools/build.py`. It prints the date range it found and any missing readings.
-4. Commit and push. GitHub Pages republishes `docs/` within a minute or two.
+To update by hand instead, run `python3 tools/fetch_ann_arbor.py` and then `python3 tools/build.py`, or save a CSV from NOAA in `data/` with a name starting `ann-arbor`, then commit and push.
 
 The day count, end date, records and charts all update from the data. Missing readings show as "–" and as blank squares in the heatmap, and they aren't counted as zero.
 
