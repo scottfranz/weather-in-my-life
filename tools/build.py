@@ -7,6 +7,7 @@ files), keeps one station per place, and writes:
   weather-data.js          the compact data the page loads
   docs/index.html          a complete page, served by GitHub Pages
   docs/weather-data.js
+  docs/<file>              a copy of each file in static/ (icons)
 
 To add newer Ann Arbor data, download another CSV for station USC00200228
 (PRCP, SNOW, TMAX, TMIN) into data/ with a name starting "ann-arbor" and run
@@ -97,6 +98,9 @@ def main():
     with open(os.path.join(SITE, "index.html"), "w") as fh:
         fh.write(page)
     shutil.copy(os.path.join(ROOT, "weather-data.js"), os.path.join(SITE, "weather-data.js"))
+    # Icons and other fixed assets.
+    for f in glob.glob(os.path.join(ROOT, "static", "*")):
+        shutil.copy(f, SITE)
 
     print(f"{n:,} days, {start} to {end}")
     for k, v in cols.items():
